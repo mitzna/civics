@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>אזרחות י״א — לאומיות וזכויות</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --accent: #4fc3f7;
+  --accent2: #a78bfa;
+  --green: #56d364;
+  --red: #f85149;
+  --yellow: #e3b341;
+  --text: #e6edf3;
+  --muted: #7d8590;
+  --r: 12px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Heebo', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* TOPBAR */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 18px;
+  background: rgba(13,17,23,0.95); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.logo { font-weight: 900; font-size: 16px; }
+.logo em { color: var(--accent); font-style: normal; }
+.teacher-btn {
+  font-size: 11px; padding: 5px 12px; border-radius: 20px;
+  border: 1px solid var(--border); background: transparent;
+  color: var(--muted); cursor: pointer; font-family: 'Heebo', sans-serif;
+  transition: all .2s;
+}
+.teacher-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+
+/* SCREENS */
+.screen { display: none; animation: fadeUp .25s ease; }
+.screen.on { display: block; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+/* HOME */
+.hero { padding: 36px 18px 24px; text-align: center; }
+.hero h1 { font-size: 28px; font-weight: 900; line-height: 1.2; margin-bottom: 8px; }
+.hero p { color: var(--muted); font-size: 14px; }
+.class-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 18px; }
+.class-card {
+  border-radius: var(--r); padding: 24px 16px; text-align: center;
+  border: 1px solid var(--border); cursor: pointer; transition: all .2s;
+  position: relative; overflow: hidden;
+}
+.class-card::before { content: ''; position: absolute; inset: 0; opacity: .07; }
+.class-card.c11::before { background: var(--accent); }
+.class-card.c12::before { background: #f06292; }
+.class-card:hover { transform: translateY(-2px); }
+.class-card.c11 { border-color: rgba(79,195,247,.3); }
+.class-card.c12 { border-color: rgba(240,98,146,.3); }
+.grade { font-size: 32px; font-weight: 900; margin-bottom: 4px; }
+.c11 .grade { color: var(--accent); }
+.c12 .grade { color: #f06292; }
+.grade-label { font-size: 12px; color: var(--muted); }
+.grade-badge { display: inline-block; margin-top: 8px; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; }
+.c11 .grade-badge { background: rgba(79,195,247,.15); color: var(--accent); }
+.c12 .grade-badge { background: rgba(240,98,146,.15); color: #f06292; }
+
+.sec-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; color: var(--muted); text-transform: uppercase; padding: 24px 18px 10px; }
+.feed-preview { padding: 0 18px 24px; display: flex; flex-direction: column; gap: 10px; }
+
+/* CLASS SCREEN */
+.class-header { padding: 20px 18px 16px; border-bottom: 1px solid var(--border); }
+.back { font-size: 12px; color: var(--muted); cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; gap: 4px; }
+.back:hover { color: var(--text); }
+.class-header h2 { font-size: 24px; font-weight: 900; }
+.class-header p { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+/* TABS */
+.tabs { display: flex; border-bottom: 1px solid var(--border); padding: 0 14px; gap: 2px; overflow-x: auto; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  flex-shrink: 0; font-family: 'Heebo', sans-serif; font-size: 13px; font-weight: 500;
+  padding: 12px 14px; border: none; background: transparent;
+  color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; transition: all .2s;
+}
+.tab.on { color: var(--text); }
+.tab.on.t11 { border-color: var(--accent); }
+.tab.on.t12 { border-color: #f06292; }
+
+/* PANELS */
+.panel { display: none; }
+.panel.on { display: block; }
+
+/* TOPICS */
+.topics { padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+.topic-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 14px 16px;
+  cursor: pointer; transition: all .2s;
+}
+.topic-item:hover { border-color: var(--ac); background: var(--surface2); }
+.topic-item .t-num { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+.topic-item h4 { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+.topic-item p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+.topic-item .t-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.t-link {
+  font-size: 11px; padding: 4px 10px; border-radius: 20px;
+  border: 1px solid var(--border); color: var(--muted);
+  text-decoration: none; transition: all .2s; display: inline-flex; align-items: center; gap: 4px;
+}
+.t-link:hover { border-color: var(--ac); color: var(--ac); }
+
+/* TOPIC DETAIL */
+.topic-detail { padding: 16px 18px; }
+.topic-detail .td-back { font-size: 12px; color: var(--muted); cursor: pointer; margin-bottom: 14px; display: flex; align-items: center; gap: 4px; }
+.topic-detail .td-back:hover { color: var(--text); }
+.td-title { font-size: 20px; font-weight: 900; margin-bottom: 6px; }
+.td-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+.td-concepts { display: flex; flex-direction: column; gap: 8px; }
+.concept-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 14px 16px; }
+.concept-card h5 { font-size: 13px; font-weight: 700; color: var(--ac); margin-bottom: 6px; }
+.concept-card p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+.td-practice-btn {
+  width: 100%; margin-top: 16px; padding: 13px;
+  border-radius: var(--r); border: none; background: var(--ac);
+  color: #fff; font-family: 'Heebo', sans-serif; font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: opacity .2s;
+}
+.td-practice-btn:hover { opacity: .85; }
+
+/* PRACTICE */
+.practice-wrap { padding: 14px; }
+.topic-select {
+  width: 100%; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 10px 14px; color: var(--text);
+  font-family: 'Heebo', sans-serif; font-size: 13px; margin-bottom: 14px; appearance: none;
+}
+.q-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 18px; margin-bottom: 12px; }
+.q-meta { font-size: 10px; color: var(--muted); margin-bottom: 8px; display: flex; gap: 8px; align-items: center; }
+.ai-tag { background: rgba(167,139,250,.15); color: var(--accent2); padding: 2px 8px; border-radius: 10px; font-size: 10px; }
+.q-type-tag { background: rgba(79,195,247,.1); color: var(--accent); padding: 2px 8px; border-radius: 10px; font-size: 10px; }
+.q-text { font-size: 15px; font-weight: 600; line-height: 1.5; margin-bottom: 14px; }
+.opts { display: flex; flex-direction: column; gap: 7px; }
+.opt {
+  padding: 11px 14px; border-radius: 8px; border: 1px solid var(--border);
+  background: transparent; color: var(--text); font-family: 'Heebo', sans-serif;
+  font-size: 13px; cursor: pointer; text-align: right; transition: all .2s;
+}
+.opt:hover:not(.disabled) { border-color: var(--ac); background: rgba(255,255,255,.04); }
+.opt.correct { border-color: var(--green); background: rgba(86,211,100,.1); color: var(--green); }
+.opt.wrong { border-color: var(--red); background: rgba(248,81,73,.1); color: var(--red); }
+.opt.disabled { pointer-events: none; }
+.explanation { margin-top: 12px; padding: 10px 14px; background: rgba(255,255,255,.04); border-radius: 8px; font-size: 12px; color: var(--muted); line-height: 1.6; border-right: 3px solid var(--ac); }
+.next-btn { width: 100%; margin-top: 10px; padding: 13px; border-radius: 8px; border: none; background: var(--ac); color: #fff; font-family: 'Heebo', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; }
+.next-btn:hover { opacity: .85; }
+.score-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; text-align: center; margin-bottom: 12px; }
+.score-big { font-size: 40px; font-weight: 900; color: var(--ac); }
+.score-sub { font-size: 12px; color: var(--muted); }
+.spinner { display: flex; justify-content: center; padding: 28px; }
+.spinner::after { content: ''; width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--accent2); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* FEED */
+.feed-list { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+.feed-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); overflow: hidden; transition: border-color .2s; }
+.feed-card:hover { border-color: var(--ac); }
+.feed-body { padding: 14px 16px; }
+.feed-tag { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 10px; background: rgba(255,255,255,.07); color: var(--muted); margin-bottom: 6px; }
+.feed-date { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+.feed-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; line-height: 1.4; }
+.feed-desc { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 10px; }
+.feed-link { font-size: 12px; color: var(--ac); text-decoration: none; font-weight: 600; }
+.feed-link:hover { text-decoration: underline; }
+.feed-actions { display: flex; gap: 8px; padding: 8px 16px; border-top: 1px solid var(--border); }
+.react-btn { background: transparent; border: 1px solid var(--border); border-radius: 16px; padding: 4px 10px; font-family: 'Heebo', sans-serif; font-size: 11px; color: var(--muted); cursor: pointer; transition: all .2s; }
+.react-btn:hover, .react-btn.on { border-color: var(--ac); color: var(--ac); }
+.share-btn { background: none; border: none; font-family: 'Heebo', sans-serif; font-size: 11px; color: var(--muted); cursor: pointer; margin-right: auto; }
+.share-btn:hover { color: var(--ac); }
+.comments-area { padding: 0 16px 12px; }
+.comment-item { font-size: 11px; color: var(--muted); padding: 5px 0; border-bottom: 1px solid var(--border); }
+.comment-form { display: flex; gap: 6px; margin-top: 8px; }
+.comment-inp { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 7px 10px; color: var(--text); font-family: 'Heebo', sans-serif; font-size: 12px; }
+.comment-inp:focus { outline: none; border-color: var(--ac); }
+.comment-send { background: var(--ac); border: none; border-radius: 8px; padding: 7px 12px; color: #fff; font-family: 'Heebo', sans-serif; font-size: 12px; cursor: pointer; }
+
+/* TEACHER PANEL */
+.t-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,.7); backdrop-filter: blur(4px); align-items: flex-end; justify-content: center; }
+.t-overlay.on { display: flex; }
+.t-sheet { background: var(--surface); border-radius: 20px 20px 0 0; width: 100%; max-width: 600px; max-height: 88vh; overflow-y: auto; padding: 20px 18px 30px; animation: slideUp .3s ease; }
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.t-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+.t-header h3 { font-size: 18px; font-weight: 900; }
+.t-close { background: var(--surface2); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; color: var(--text); font-size: 16px; }
+.form-group { margin-bottom: 12px; }
+.form-group label { display: block; font-size: 11px; color: var(--muted); font-weight: 700; margin-bottom: 5px; }
+.form-ctrl { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; color: var(--text); font-family: 'Heebo', sans-serif; font-size: 13px; }
+.form-ctrl:focus { outline: none; border-color: var(--accent2); }
+textarea.form-ctrl { min-height: 70px; resize: vertical; }
+.t-submit { width: 100%; padding: 13px; border: none; background: linear-gradient(135deg, #a78bfa, #7c3aed); color: #fff; font-family: 'Heebo', sans-serif; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; margin-top: 4px; }
+.t-submit:hover { opacity: .9; }
+.t-section { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; padding: 18px 0 10px; }
+.pass-wrap { text-align: center; padding: 10px 0; }
+.pass-wrap h3 { font-size: 17px; font-weight: 700; margin-bottom: 14px; }
+.pass-row { display: flex; gap: 6px; }
+.pass-inp { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; color: var(--text); font-family: 'Heebo', sans-serif; font-size: 13px; }
+.pass-go { background: var(--accent2); border: none; border-radius: 8px; padding: 9px 14px; color: #fff; font-family: 'Heebo', sans-serif; cursor: pointer; }
+.pass-err { color: var(--red); font-size: 11px; margin-top: 6px; }
+
+.empty { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; }
+.empty .icon { font-size: 36px; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">אזרחות <em>מעיין שחר</em></div>
+  <button class="teacher-btn" onclick="openTeacher()">🔐 מורה</button>
+</div>
+
+<!-- HOME -->
+<div id="s-home" class="screen on">
+  <div class="hero">
+    <h1>שלום 👋<br>בחר את כיתתך</h1>
+    <p>חומר לימוד, תרגול ועדכוני המורה</p>
+  </div>
+  <div class="class-cards">
+    <div class="class-card c11" onclick="openClass('11')">
+      <div class="grade">י״א</div>
+      <div class="grade-label">לאומיות וזכויות</div>
+      <div class="grade-badge">תכנית חדשה</div>
+    </div>
+    <div class="class-card c12" onclick="openClass('12')">
+      <div class="grade">י״ב</div>
+      <div class="grade-label">תכנית ישנה</div>
+      <div class="grade-badge">בקרוב</div>
+    </div>
+  </div>
+  <div class="sec-label">עדכוני המורה</div>
+  <div class="feed-preview" id="home-feed"></div>
+</div>
+
+<!-- CLASS -->
+<div id="s-class" class="screen">
+  <div class="class-header">
+    <div class="back" onclick="goHome()">← חזרה</div>
+    <h2 id="cls-title"></h2>
+    <p id="cls-sub"></p>
+  </div>
+  <div class="tabs" id="cls-tabs">
+    <button class="tab on" onclick="switchTab('topics')">📚 נושאים</button>
+    <button class="tab" onclick="switchTab('practice')">✏️ תרגול</button>
+    <button class="tab" onclick="switchTab('feed')">📰 עדכונים</button>
+  </div>
+
+  <div id="panel-topics" class="panel on">
+    <div id="topics-container"></div>
+  </div>
+  <div id="panel-practice" class="panel">
+    <div class="practice-wrap">
+      <select class="topic-select" id="prac-select" onchange="startPractice()">
+        <option value="">— בחר נושא לתרגול —</option>
+      </select>
+      <div id="prac-content"></div>
+    </div>
+  </div>
+  <div id="panel-feed" class="panel">
+    <div id="cls-feed" class="feed-list"></div>
+  </div>
+</div>
+
+<!-- TEACHER PANEL -->
+<div id="t-panel" class="t-overlay" onclick="overlayClick(event)">
+  <div class="t-sheet">
+    <div id="t-pass">
+      <div class="pass-wrap">
+        <h3>🔐 כניסת מורה</h3>
+        <div class="pass-row">
+          <input type="password" class="pass-inp" id="pass-in" placeholder="סיסמה" onkeydown="if(event.key==='Enter')checkPass()">
+          <button class="pass-go" onclick="checkPass()">כניסה</button>
+        </div>
+        <div class="pass-err" id="pass-err"></div>
+      </div>
+    </div>
+    <div id="t-main" style="display:none">
+      <div class="t-header">
+        <h3>🛠 פאנל מורה</h3>
+        <button class="t-close" onclick="closeTeacher()">×</button>
+      </div>
+
+      <div class="t-section">➕ פרסום עדכון</div>
+      <div class="form-group"><label>כיתה</label>
+        <select class="form-ctrl" id="t-cls"><option value="both">שתיהן</option><option value="11">י״א</option><option value="12">י״ב</option></select>
+      </div>
+      <div class="form-group"><label>כותרת</label><input class="form-ctrl" id="t-ttl" type="text" placeholder="כותרת העדכון"></div>
+      <div class="form-group"><label>תיאור</label><textarea class="form-ctrl" id="t-dsc" placeholder="פירוט קצר..."></textarea></div>
+      <div class="form-group"><label>קישור (אופציונלי)</label><input class="form-ctrl" id="t-url" type="url" placeholder="https://..."></div>
+      <div class="form-group"><label>תגית</label><input class="form-ctrl" id="t-tag" type="text" placeholder="כתבה / וידאו / פסיקה..."></div>
+      <button class="t-submit" onclick="addUpdate()">פרסם עדכון</button>
+
+      <div class="t-section">📎 הוספת קישור לנושא (י״א)</div>
+      <div class="form-group"><label>נושא</label>
+        <select class="form-ctrl" id="t-tp-sel"></select>
+      </div>
+      <div class="form-group"><label>תווית</label><input class="form-ctrl" id="t-lbl" type="text" placeholder="מצגת / מאמר..."></div>
+      <div class="form-group"><label>קישור</label><input class="form-ctrl" id="t-lnk" type="url" placeholder="https://..."></div>
+      <button class="t-submit" onclick="addLink()">הוסף קישור</button>
+
+      <div class="t-section">❓ הוספת שאלת תרגול (י״א)</div>
+      <div class="form-group"><label>נושא</label><select class="form-ctrl" id="t-q-tp"></select></div>
+      <div class="form-group"><label>שאלה</label><textarea class="form-ctrl" id="t-q-txt" placeholder="כתוב את השאלה..."></textarea></div>
+      <div class="form-group"><label>תשובה א</label><input class="form-ctrl" id="t-q-a" type="text"></div>
+      <div class="form-group"><label>תשובה ב</label><input class="form-ctrl" id="t-q-b" type="text"></div>
+      <div class="form-group"><label>תשובה ג</label><input class="form-ctrl" id="t-q-c" type="text"></div>
+      <div class="form-group"><label>תשובה ד</label><input class="form-ctrl" id="t-q-d" type="text"></div>
+      <div class="form-group"><label>תשובה נכונה</label>
+        <select class="form-ctrl" id="t-q-ans"><option value="0">א</option><option value="1">ב</option><option value="2">ג</option><option value="3">ד</option></select>
+      </div>
+      <div class="form-group"><label>הסבר (אופציונלי)</label><textarea class="form-ctrl" id="t-q-exp" placeholder="הסבר לתשובה..."></textarea></div>
+      <button class="t-submit" onclick="addQuestion()">הוסף שאלה</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PASS = "maayan2025";
+let teacherIn = false;
+let curClass = null;
+let curTab = 'topics';
+let pracQs = [], pracIdx = 0, pracScore = 0, pracAnswered = false;
+let topicDetailMode = false;
+
+// ── BUILT-IN DATA ──────────────────────────────────────────────
+const TOPICS_11 = [
+  {
+    id: 0, name: "הרקע ההיסטורי להקמת המדינה",
+    desc: "הצהרת בלפור, כתב המנדט, והחלטה 181 של האו\"ם — הבסיס הבינלאומי להקמת המדינה",
+    concepts: [
+      { title: "הצהרת בלפור (1917)", body: "מכתב שר החוץ הבריטי ללורד רוטשילד — הבטחה לקדם הקמת בית לאומי לעם היהודי בארץ ישראל." },
+      { title: "כתב המנדט (1922)", body: "הסמכה לבריטניה על ידי חבר הלאומים לשלוט בארץ ישראל ולממש את הצהרת בלפור, תוך שמירה על זכויות לא-יהודים." },
+      { title: "החלטה 181 — תוכנית החלוקה (1947)", body: "החלטת עצרת האו\"ם להקים מדינה יהודית ומדינה ערבית. ירושלים תחת שליטה בינלאומית. ההנהגה היהודית קיבלה; הערבים דחו." }
+    ],
+    links: []
+  },
+  {
+    id: 1, name: "הכרזת העצמאות",
+    desc: "ארבעת חלקי המגילה: היסטורי, אופרטיבי, הצהרתי ומדיני — ומאפייני המדינה היהודית-דמוקרטית",
+    concepts: [
+      { title: "החלק ההיסטורי — 3 הצדקות", body: "1) הצדקה טבעית-אוניברסלית: זכות כל עם להגדרה עצמית.\n2) הצדקה משפטית-בינלאומית: הצהרת בלפור, כתב המנדט, החלטה 181.\n3) הצדקה היסטורית: קשר העם לארץ, הגלות, השיבה, השואה." },
+      { title: "החלק האופרטיבי", body: "הצהרה על הקמת המדינה, מוסדות השלטון, שיטת הממשל הדמוקרטית, קיום בחירות וכינון חוקה." },
+      { title: "החלק ההצהרתי — אופי המדינה", body: "ערכי החירות, השוויון, חופש דת ומצפון, שוויון זכויות לכל האזרחים ללא הבדל דת/גזע/מין, שמירה על מקומות קדושים." },
+      { title: "ארבע הפניות (החלק המדיני)", body: "לאו\"ם — שיתוף פעולה וקבלה למשפחת העמים.\nלערבים תושבי ישראל — אזרחות מלאה ושווה.\nלמדינות השכנות — שלום ושכנות טובה.\nלעם היהודי בתפוצות — להתלכד ולסייע." }
+    ],
+    links: []
+  },
+  {
+    id: 2, name: "הרעיון הלאומי",
+    desc: "קבוצה אתנית מול לאום, ושני סוגי הלאומיות — אתנית-תרבותית ופוליטית-אזרחית",
+    concepts: [
+      { title: "קבוצה אתנית vs. לאום", body: "קבוצה אתנית: יסודות משותפים (מוצא, שפה, תרבות, היסטוריה, דת) — ללא בהכרח דרישה לריבונות.\nלאום: אותם יסודות + מדינה ריבונית / אוטונומיה, או שאיפה לאחת מהן." },
+      { title: "לאומיות אתנית-תרבותית", body: "שאיפה לשלטון עצמי במסגרת מדינה ריבונית, המבוססת על יסודות אתניים-תרבותיים: מוצא, שפה, תרבות, היסטוריה ודת." },
+      { title: "לאומיות פוליטית-אזרחית", body: "שאיפה לשלטון עצמי המבוססת על יסודות פוליטיים: שותפות, אידיאולוגיה, ערכים משותפים — ללא קשר למוצא." }
+    ],
+    links: []
+  },
+  {
+    id: 3, name: "מדינת ישראל והעם היהודי בתפוצות",
+    desc: "האחריות ההדדית בין מדינת ישראל ליהודי התפוצות — עלייה, חינוך, ביטחון ותמיכה",
+    concepts: [
+      { title: "אחריות המדינה ליהודי התפוצות", body: "עלייה וקליטה (חוק השבות), חינוך וחיזוק הקשר (הסוכנות הציונית, תגלית), ביטחון — סיוע ליהודים במצוקה, ואפשרות ענישה על פגיעה ביהודים מחוץ לישראל." },
+      { title: "יחס התפוצות למדינה", body: "זהות והזדהות, תמיכה פוליטית דרך שדולות וארגונים, ותמיכה כלכלית בגיוס תרומות." },
+      { title: "אתגר ה'נאמנות הכפולה'", body: "רבים מיהודי העולם מזדהים עם ישראל אך הם אזרחים מלאים במדינותיהם — מה שיוצר לעתים דילמות נאמנות. הדור הצעיר מזדהה פחות." }
+    ],
+    links: []
+  },
+  {
+    id: 4, name: "עמדות לגבי זהות המדינה",
+    desc: "ארבע עמדות (\"חלומות\") לגבי האופי הרצוי של מדינת ישראל — מיהודית לא-דמוקרטית ועד אזרחית גרידא",
+    concepts: [
+      { title: "1. מדינת לאום יהודית לא-דמוקרטית", body: "ישראל מזוהה עם הלאום היהודי בלבד. כשיש מתח בין יהודי לדמוקרטי — היהודי גובר תמיד. אין מחויבות לשוויון זכויות מלא." },
+      { title: "2. מדינת לאום יהודית דמוקרטית", body: "המדינה יהודית ומחויבת גם לשוויון מלא בין כל אזרחיה. מדינת העם היהודי בארץ ובתפוצות. (העמדה הרשמית הנוהגת)." },
+      { title: "3. מדינה דו-לאומית דמוקרטית", body: "המדינה מזוהה עם הלאום היהודי והערבי בשווה. שינוי דגל, סמלים, המנון כך שיבטאו גם את הזהות הערבית." },
+      { title: "4. מדינת לאום אזרחית דמוקרטית", body: "ביטול הזהות היהודית של המדינה. הסמלים, החוקים והמוסדות יבטאו רק את מה שמשותף לכל האזרחים. זהות לאומית על בסיס אזרחות ישראלית בלבד." }
+    ],
+    links: []
+  },
+  {
+    id: 5, name: "המיעוטים בישראל",
+    desc: "מעמד המיעוטים — ערבים, דרוזים ואחרים — זכויות, מאפיינים ומרחב ציבורי",
+    concepts: [
+      { title: "מעמד המיעוטים — כללי", body: "מגילת העצמאות התחייבה לשוויון לכל אזרח ללא הבדל. ישראל מעניקה זכויות פרט מלאות. יש ביטוי תרבותי ודתי רחב במרחב הציבורי." },
+      { title: "ערבים בישראל (~20%)", body: "קבוצת המיעוט הגדולה. רובם מזדהים כחלק מהלאום הערבי/פלסטיני. פטורים מגיוס (חלקם מתנדבים). יש מגמות השתלבות לצד בידול." },
+      { title: "דרוזים בישראל (<2%)", body: "דת ייחודית וסודית. מגדירים עצמם קבוצה אתנית נפרדת ללא שאיפה לאומית. נאמנים למדינה ומשולבים בצבא ובתפקידים בכירים." },
+      { title: "ביטויים מוסדיים", body: "ערבית בעלת מעמד מיוחד. ימי מועד של המיעוטים מוכרים. בתי דין דתיים לכל עדה. מערכות חינוך נפרדות בשפת המיעוט." }
+    ],
+    links: []
+  },
+  {
+    id: 6, name: "השסע הלאומי",
+    desc: "הקרע בין יהודים לערבים — היסטוריה, ביטויים עכשוויים ודרכי התמודדות",
+    concepts: [
+      { title: "מהו השסע הלאומי?", body: "קרע בין הציבור היהודי לציבור הערבי בישראל. נוצר לפני קום המדינה עם המאבק על ארץ ישראל, הגיע לשיאו במלחמת העצמאות." },
+      { title: "ביטויים עכשוויים", body: "הציבור היהודי רואה בערביי ישראל חלק מהעולם הערבי/פלסטיני. הציבור הערבי חש קיפוח ואפליה. פערים חברתיים-כלכליים משמעותיים." },
+      { title: "דרכי התמודדות", body: "חינוך לסובלנות, הקפדה על זכויות הפרט, ייצוג הולם בשירות המדינה, העדפה מתקנת, שיטת בחירות יחסית המאפשרת ייצוג בכנסת." }
+    ],
+    links: []
+  },
+  {
+    id: 7, name: "עקרונות הדמוקרטיה",
+    desc: "פלורליזם, סובלנות, הסכמיות ושלטון החוק — ארבעת עמודי התווך של המשטר הדמוקרטי",
+    concepts: [
+      { title: "פלורליזם", body: "הכרה בערך ריבוי הדעות ותמיכה בקיומן וביטויין של קבוצות שונות בחברה." },
+      { title: "סובלנות", body: "קבלת השונה, יחס מכבד לאורח חיים שונה, הימנעות מתגובות אלימות ומהפעלת כוח שלטוני כלפי ביקורת." },
+      { title: "הסכמיות", body: "הסכמה רחבה על כללי משחק בסיסיים ועל אופי החברה, מחזקת יציבות ומאפשרת חיים משותפים למרות חילוקי דעות." },
+      { title: "שלטון החוק", body: "החוק עליון ומחייב גם את השלטון. חוקים שוויוניים, כלליים, ברורים ופומביים. טיפ: תקנות / פקודות / הוראות / נהלים = שלטון החוק." }
+    ],
+    links: []
+  },
+  {
+    id: 8, name: "עקרון שלטון החוק",
+    desc: "סוגי עבריינות — פלילית, שלטונית-אישית ושלטונית-ציבורית — ופקודה בלתי חוקית בעליל",
+    concepts: [
+      { title: "עבריינות פלילית רגילה", body: "עבירה מתוך אינטרס אישי, על ידי כל אדם, לרוב באופן אלים. העבריין אינו מוכן לשאת בתוצאות. יחס החברה — שלילי." },
+      { title: "עבריינות שלטונית-אישית", body: "עבירה על ידי נושא משרה ציבורית מתוך אינטרס אישי, תוך שימוש בכוחו הציבורי. סכנה לאמון הציבור ברשויות." },
+      { title: "עבריינות שלטונית-ציבורית", body: "עבירה על ידי נושא משרה ציבורית מתוך רצון להטיב עם קבוצה מסוימת או לטובת הכלל — לפי תפיסתו. חלק מהציבור יגלה סלחנות." },
+      { title: "פקודה בלתי חוקית בעליל", body: "פקודה הסותרת ערכי מוסר ומצפון בסיסיים — 'דגל שחור מתנוסס מעליה'. חובה שלא לציית — גם בצבא. ציות יגרום להעמדה לדין." }
+    ],
+    links: []
+  },
+  {
+    id: 9, name: "סוגי זכויות",
+    desc: "זכויות טבעיות, פוליטיות/אזרח וקבוצתיות/תרבותיות — הגדרות ודוגמאות",
+    concepts: [
+      { title: "זכויות טבעיות/בסיסיות", body: "זכויות יסוד לכל אדם באשר הוא — אינן מוענקות על ידי השלטון. כוללות: חיים וביטחון, קניין, חירות, שוויון, כבוד, הליך הוגן." },
+      { title: "זכויות פוליטיות/אזרח", body: "זכויות אזרח (לאזרחים בלבד): הזכות לבחור ולהיבחר, חופש התאגדות פוליטית.\nזכויות פוליטיות מזכויות טבעיות (לכולם): חופש הפגנה ומחאה, ביקורת השלטון." },
+      { title: "זכויות קבוצתיות/תרבותיות", body: "זכויות למיעוטים לאומיים בתחומי שפה, חינוך, תרבות, ייצוג, דת ופולחן. נועדו להסדיר מוסדית את הזהות הייחודית של הקבוצה." }
+    ],
+    links: []
+  },
+  {
+    id: 10, name: "זכויות האדם הטבעיות",
+    desc: "12 הזכויות הטבעיות: כבוד, חיים וביטחון, הליך הוגן, חרות ונגזרותיה, שוויון וקניין",
+    concepts: [
+      { title: "כבוד (כולל פרטיות ושם טוב)", body: "הזכות שלא להיות חשוף ליחס משפיל. הזכות לפרטיות — לא לחדור לחייו/גופו/חפציו. הזכות לשם טוב — לא לפרסם מידע שקרי שלילי." },
+      { title: "חיים וביטחון", body: "אין לפגוע בחייו ובגופו של אדם. חובת המדינה להגן על תושביה מפני פגיעה בחיים ובגוף." },
+      { title: "הליך הוגן", body: "חף מפשע עד הוכחת אשמה. זכות למשפט הוגן: עו\"ד, שופטים בלתי תלויים, ענישה לפי חוק, ידיעת האשמה, זכות לערעור." },
+      { title: "חרות ונגזרותיה (במת עד\"מ)", body: "חופש הביטוי, חופש המחשבה והמצפון, חופש התנועה, חופש העיסוק, חופש הדת, חופש מדת. זכר: במ\"ת עד\"מ." },
+      { title: "שוויון", body: "אין להפלות על בסיס זהות. מובן מצומצם: שוויון בפני החוק. מובן רחב: שוויון הזדמנויות. קשור ל-3 סוגי מדיניות: אפליה פסולה, הבחנה (מותרת), העדפה מתקנת." },
+      { title: "קניין", body: "זכות להחזיק רכוש ולעשות בו כרצון. קניין חומרי (רכוש מוחשי) וקניין רוחני (פטנט/המצאה/יצירה). בתשובה — לציין את סוג הקניין." }
+    ],
+    links: []
+  },
+  {
+    id: 11, name: "סוגי מדיניות בשוויון",
+    desc: "אפליה פסולה, הבחנה מותרת והעדפה מתקנת — ההבדלים וכיצד לזהות בשאלות אירוע",
+    concepts: [
+      { title: "אפליה פסולה", body: "יחס שונה ללא סיבה מוצדקת, בגלל זהות/מוצא/דת/מין/גזע/מגבלה. פוגעת בזכות לשוויון." },
+      { title: "הבחנה (מותרת)", body: "יחס לא שוויוני מסיבה מוצדקת — כשהשוני בין האנשים רלוונטי לנושא הנידון. לא מוגבל בזמן. מיועד לפרט." },
+      { title: "העדפה מתקנת", body: "הטבה לקבוצה חלשה שסבלה מקיפוח — למשך זמן מוגבל — במטרה לצמצם פערים. יוצרת אפליה כלפי אחרים ולכן שנויה במחלוקת." }
+    ],
+    links: []
+  },
+  {
+    id: 12, name: "חובות האדם וזכויות מתנגשות",
+    desc: "חובות כאדם וכאזרח, ואיזון בין זכויות מתנגשות בדמוקרטיה",
+    concepts: [
+      { title: "חובות האדם כאדם", body: "להכיר בזכויות הזולת ולהימנע מפגיעה בהן." },
+      { title: "חובות האזרח", body: "ציות לחוק (מיסים, שירות צבאי). השתתפות בחיים הציבוריים (הצבעה, ביקורת שלטון). תרומה לקהילה." },
+      { title: "זכויות מתנגשות", body: "הזכויות יחסיות ולא מוחלטות. כשזכויות מתנגשות — בית המשפט מבצע איזון סביר. ניתן להגביל זכות כשמימושה פוגע בזכויות אחרים או באינטרס ציבורי." }
+    ],
+    links: []
+  },
+  {
+    id: 13, name: "דמוקרטיה מתגוננת",
+    desc: "זכות הדמוקרטיה להגן על עצמה מפני מי שמנצל את הכלים הדמוקרטיים לחיסולה",
+    concepts: [
+      { title: "מהי דמוקרטיה מתגוננת?", body: "הגנה על המשטר הדמוקרטי מפני אדם/קבוצה שפועלים בזירה הציבורית תוך ניצול כלים דמוקרטיים לחיסול הדמוקרטיה. הגבלת חופש ביטוי, פעולה פוליטית והתאגדות." },
+      { title: "דמוקרטיה מתגוננת בישראל", body: "לפי חוק יסוד הכנסת וחוק המפלגות — מפלגה לא יכולה להתמודד אם: שוללת את ישראל כמדינה יהודית ודמוקרטית / מסיתה לגזענות / תומכת בטרור נגד ישראל." }
+    ],
+    links: []
+  },
+  {
+    id: 14, name: "יסודות חוקתיים",
+    desc: "חוקי היסוד, חוק כבוד האדם וחירותו, חוק הלאום, וחוק השבות",
+    concepts: [
+      { title: "חוקי היסוד — מה מייחד אותם?", body: "צורה: כותרת 'חוק יסוד', ניסוח כללי, ללא שנת חקיקה. תוכן: עוסק בנושאים חוקתיים — אופי המדינה, סמכויות הרשויות, זכויות. מהווים תשתית לחוקה העתידית לפי פשרת הררי." },
+      { title: "חוק יסוד: כבוד האדם וחירותו", body: "מפרט את זכויות היסוד: חיים, קניין, כבוד ופרטיות, חופש תנועה. פסקת הגבלה: ניתן לחוקק חוק סותר רק אם 'הולם את ערכי המדינה, נועד לתכלית ראויה, ופגיעתו מידתית'." },
+      { title: "חוק יסוד: ישראל — מדינת הלאום", body: "מעגן את אופי המדינה היהודי. בין סעיפיו: ירושלים — בירת ישראל, קיבוץ גלויות, הלוח העברי כלוח רשמי." },
+      { title: "חוק השבות (1950)", body: "כל יהודי זכאי לעלות לארץ. כולל בני/בנות זוג, ילדים ונכדים של יהודים. מחלוקת: מיהו יהודי? (1970: נולד לאם יהודייה / התגייר)." }
+    ],
+    links: []
+  }
+];
+
+// Built-in questions by topic index
+const BUILTIN_QS = {
+  0: [
+    { text: "מהי הצהרת בלפור?", options: ["מכתב ששלח שר החוץ הבריטי בשנת 1917, המודיע על תמיכת בריטניה בהקמת בית לאומי לעם היהודי בארץ ישראל","הסכם שנחתם בין ישראל לבריטניה ב-1922","החלטת האו\"ם מ-1947 לחלוקת ארץ ישראל","הצהרה של ממשלת ישראל על עצמאותה"], correct:0, explanation:"הצהרת בלפור היא מכתב שר החוץ הבריטי בלפור ללורד רוטשילד (1917), המבטיח קידום הקמת בית לאומי לעם היהודי.", type:"ידע" },
+    { text: "מה קבעה החלטה 181 (תוכנית החלוקה) לגבי ירושלים?", options: ["ירושלים תהיה בירת המדינה היהודית","ירושלים תהיה תחת שליטה בינלאומית","ירושלים תחולק בין המדינה היהודית לערבית","ירושלים תישאר תחת שלטון בריטי"], correct:1, explanation:"לפי החלטה 181, ירושלים תהיה עיר בשליטה בינלאומית — לא תובלע לאף אחת מהמדינות.", type:"ידע" },
+    { text: "מה היה תגובת ההנהגה הערבית להחלטה 181?", options: ["קיבלה אותה ופעלה למימושה","דחתה אותה והחלה בפעולות איבה","ביקשה שינויים וחתמה בסופו של דבר","נמנעה מהצבעה באו\"ם"], correct:1, explanation:"ההנהגה הערבית דחתה את תוכנית החלוקה ופתחה בפעולות איבה — השלב הראשון של מלחמת העצמאות.", type:"ידע" }
+  ],
+  1: [
+    { text: "ישראל חתמה על הסכמי אברהם עם מדינות ערביות, ונציגיה אמרו כי הדבר יוביל לשיתוף פעולה כלכלי ולקידום השלום במזרח התיכון. איזו פנייה מהכרזת העצמאות מתממשת בכך?", options: ["פנייה לעם היהודי בתפוצות","פנייה לאו\"ם","פנייה למדינות השכנות","פנייה לערבים תושבי ישראל"], correct:2, explanation:"הפנייה למדינות השכנות — הכרזת העצמאות פנתה אליהן ביד לשלום, שכנות טובה ושיתוף פעולה כלכלי.", type:"אירוע" },
+    { text: "עשרות בני נוער יהודים מהתפוצות הגיעו להתגייס לצה\"ל ב'חרבות ברזל'. אחד אמר: 'זה הבית שלנו, הגענו לתרום'. איזו פנייה מהכרזת העצמאות מתממשת?", options: ["פנייה לאו\"ם","פנייה למדינות השכנות","פנייה לעם היהודי בתפוצות","פנייה לערבים תושבי ישראל"], correct:2, explanation:"הפנייה לעם היהודי בתפוצות — הכרזת העצמאות קראה לו להתלכד סביב הישוב ולסייע במאמץ הגדול.", type:"אירוע" },
+    { text: "מה כוללת 'ההצדקה ההיסטורית' להקמת מדינת ישראל לפי החלק ההיסטורי בהכרזה?", options: ["הכרת מדינות העולם בזכות היהודים למדינה","הזכות הטבעית של כל עם לריבונות","קשר העם היהודי לארץ, המשך הקשר בגלות, מאמצי השיבה, השואה והשתתפות במלחמת העולם","תמיכת בריטניה וחבר הלאומים בהקמת המדינה"], correct:2, explanation:"ההצדקה ההיסטורית מתבססת על: קשר היסטורי לארץ, תקווה בגלות, שיבה בדורות האחרונים, השואה, ושירות במלחמת העולם.", type:"ידע" },
+    { text: "ממשלת ישראל ומדינת ירדן פועלות יחד למניעת ייבוש ים המלח, בניית צינור מים סוף לים המלח. איזו פנייה מהכרזה מתממשת?", options: ["פנייה לעם היהודי בתפוצות","פנייה לערבים תושבי ישראל","פנייה לאו\"ם","פנייה למדינות השכנות"], correct:3, explanation:"פנייה למדינות השכנות — שיתוף פעולה עם ירדן לקידום האזור, כפי שהכרזה קראה לכך.", type:"אירוע" }
+  ],
+  2: [
+    { text: "בצפון אירלנד נאבקים תושבים ממוצא אירי קתולי לעצמאות מבריטניה, בניגוד לתושבים ממוצא אנגלי פרוטסטנטי. על איזה סוג לאומיות מתבסס מאבק זה?", options: ["לאומיות פוליטית-אזרחית","לאומיות דמוקרטית-ליברלית","לאומיות אתנית-תרבותית","לאומיות כלכלית-מעמדית"], correct:2, explanation:"לאומיות אתנית-תרבותית — המאבק מבוסס על מוצא, דת ותרבות (אירי קתולי מול אנגלי פרוטסטנטי).", type:"אירוע" },
+    { text: "בקנדה הוחלף הדגל לדגל המסמל את הזהות המשותפת של כל אזרחי המדינה — ללא הבדל מוצא, שפה או אמונה. על איזה סוג לאומיות מתבסס הדגל החדש?", options: ["לאומיות אתנית-תרבותית","לאומיות דתית","לאומיות פוליטית-אזרחית","לאומיות היסטורית"], correct:2, explanation:"לאומיות פוליטית-אזרחית — הזהות מבוססת על ערכים ואזרחות משותפת, לא על מוצא או דת.", type:"אירוע" },
+    { text: "מה ההבדל בין קבוצה אתנית ללאום?", options: ["קבוצה אתנית גדולה יותר מלאום","לאום יש לו מדינה ריבונית או שאיפה לכך, קבוצה אתנית לא בהכרח","קבוצה אתנית מוגדרת רק על פי דת","לאום מוגדר רק לפי שפה"], correct:1, explanation:"ההבדל המרכזי: לאום — יש לו מדינה ריבונית / אוטונומיה, או שהוא שואף לכך. קבוצה אתנית — לא בהכרח.", type:"ידע" }
+  ],
+  3: [
+    { text: "חוק השבות הוא ביטוי למחויבות ישראל כלפי יהודי התפוצות. באיזה תחום?", options: ["תמיכה כלכלית","ביטחון","עלייה וקליטה","חינוך"], correct:2, explanation:"חוק השבות מאפשר לכל יהודי לעלות לישראל ולקבל אזרחות — ביטוי למחויבות המדינה בתחום העלייה והקליטה.", type:"ידע" },
+    { text: "קהילה יהודית באירופה שלחה רופאי עיניים לישראל לטפל בקשישים וניצולי שואה. מה הם הסבירו שמממש?", options: ["חוק השבות","פנייה לעם היהודי בתפוצות מהכרזת העצמאות","סעיף בחוק הלאום","פנייה לאו\"ם"], correct:1, explanation:"הפנייה לעם היהודי בתפוצות בהכרזה קוראת לתמיכה ולסיוע לישוב — הרופאים ממשים זאת.", type:"אירוע" }
+  ],
+  4: [
+    { text: "שר ישראלי אמר: 'ישראל היא מדינה יהודית, אך מחויבת לשוויון זכויות לחברה הערבית'. איזו עמדה לגבי זהות המדינה הוא מביע?", options: ["מדינת לאום יהודית לא-דמוקרטית","מדינה דו-לאומית","מדינת לאום יהודית דמוקרטית","מדינת לאום אזרחית"], correct:2, explanation:"מדינת לאום יהודית דמוקרטית — מדינה יהודית הן מבחינת אופייה והן מחויבת לשוויון זכויות לכל אזרחיה.", type:"אירוע" },
+    { text: "מפלגה ביקשה להירשם עם המטרה: 'לבטל כל זהות לאומית יהודית ולבסס זהות על ערכים ישראליים אזרחיים בלבד'. רשם המפלגות דחה. איזו עמדה ביטאה המפלגה?", options: ["מדינת לאום יהודית דמוקרטית","מדינה דו-לאומית","מדינת לאום אזרחית דמוקרטית","מדינת לאום יהודית לא-דמוקרטית"], correct:2, explanation:"מדינת לאום אזרחית דמוקרטית — ביטול הזהות היהודית, הגדרת הזהות על בסיס אזרחות בלבד.", type:"אירוע" },
+    { text: "אזרח כתב שהוא שמח שהרכבת הקלה בירושלים מכריזה בעברית ובערבית — ובכך מתממשים גם שוויון וגם אופייה היהודי של ירושלים. איזו עמדה הוא מבטא?", options: ["מדינת לאום אזרחית","מדינה דו-לאומית","מדינת לאום יהודית לא-דמוקרטית","מדינת לאום יהודית דמוקרטית"], correct:3, explanation:"מדינת לאום יהודית דמוקרטית — מכיר בזהות היהודית של המדינה ובמחויבות לשוויון לכל אזרחיה.", type:"אירוע" }
+  ],
+  5: [
+    { text: "מה מאפיין את קבוצת הדרוזים בישראל (בגליל) בניגוד לרוב הערבים?", options: ["דוברי שפה שונה","שאיפות לאומיות חזקות לעצמאות","נאמנות למדינה ושילוב בצבא ובמנגנוני המדינה","חיים בעיקר בדרום הארץ"], correct:2, explanation:"הדרוזים בגליל מגדירים עצמם קבוצה אתנית נפרדת, נאמנה למדינה, ומשולבת בצבא ובתפקידים בכירים.", type:"ידע" },
+    { text: "איזה מעמד יש לשפה הערבית בישראל?", options: ["שפה רשמית כמו עברית לכל דבר","מעמד מיוחד — חלק מפרסומי המדינה והשלטים מחויבים להיכתב גם בה","שפה מוכרת ללא מעמד רשמי","שפה פרטית ללא הכרה ממשלתית"], correct:1, explanation:"לערבית מעמד מיוחד בישראל — חלק מפרסומים רשמיים, שלטי כוונה ותקנות חייבים להיכתב גם בערבית.", type:"ידע" }
+  ],
+  6: [
+    { text: "מה הוא אחד האתגרים המרכזיים שהשסע הלאומי יוצר?", options: ["העדר מפלגות ערביות בכנסת","פערים חברתיים-כלכליים בין יהודים לערבים בישראל","העדר חינוך דו-לשוני","היעדר ייצוג ערבי בממשלה"], correct:1, explanation:"הערבים סובלים ממצב חברתי-כלכלי נמוך יותר מהיהודים — אחד הביטויים המרכזיים של השסע הלאומי.", type:"ידע" },
+    { text: "איזו דרך מהתמודדות עם השסע הלאומי מתוארת כשממשלה מקצה תקציבים מיוחדים לפיתוח יישובים ערביים?", options: ["חינוך לסובלנות","שיטת בחירות יחסית","העדפה מתקנת","הקפדה על זכויות הפרט"], correct:2, explanation:"הקצאת משאבים מיוחדים לאוכלוסייה שסבלה מקיפוח היא מדיניות של העדפה מתקנת.", type:"ידע" }
+  ],
+  7: [
+    { text: "בית משפט פסל מועמד לכנסת שהסית לגזענות כלפי המיעוט הערבי, בנימוק שהדבר 'מחוץ לכללי המשחק'. איזה עקרון דמוקרטי עמד בבסיס ההחלטה?", options: ["פלורליזם","שלטון החוק","סובלנות","הסכמיות"], correct:2, explanation:"סובלנות — השופטים פסלו את הלהבה לגזענות ואת השיח המזלזל, בשם ערך הסובלנות כלפי המיעוט.", type:"אירוע" },
+    { text: "שחקן כדורגל הושעה כי השתמש בחומרים האסורים על פי תקנות האיגוד הבינלאומי, למרות שלא היו אסורים בחוק הישראלי. איזה עקרון דמוקרטי עמד בבסיס ההשעייה?", options: ["פלורליזם","סובלנות","הסכמיות","שלטון החוק"], correct:3, explanation:"שלטון החוק — תקנות האיגוד מחייבות, וכל מי שנמצא תחת סמכותן חייב לציית להן.", type:"אירוע" },
+    { text: "ראשי יישובים ומועצת קיבוץ הגיעו להסכמה על גישה לנחל: הקיבוץ יקצה אזור מסוים למבקרים. 'הצדדים החליטו לפעול בשיתוף מלא'. איזה עקרון בא לידי ביטוי?", options: ["שלטון החוק","פלורליזם","הסכמיות","סובלנות"], correct:2, explanation:"הסכמיות — הגעה להסכמה רחבה על כללי משחק, מה שמאפשר חיים משותפים למרות ניגוד אינטרסים.", type:"אירוע" },
+    { text: "תחנת רדיו הכריזה שתשמיע 'מגוון סגנונות מוזיקה לביטוי מגוון הקהלים בחברה הישראלית'. איזה עקרון מנהל הרדיו מבטא?", options: ["שלטון החוק","הסכמיות","סובלנות","פלורליזם"], correct:3, explanation:"פלורליזם — הכרה בערך ריבוי הדעות והקהלים, ותמיכה בביטוים המגוון.", type:"אירוע" }
+  ],
+  8: [
+    { text: "אוהד שהסתער למגרש כדורגל לצורך צילום הושעה. מה סוג העבריינות?", options: ["עבריינות שלטונית-ציבורית","עבריינות שלטונית-אישית","עבריינות פלילית רגילה","פקודה בלתי חוקית בעליל"], correct:2, explanation:"עבריינות פלילית רגילה — עבירה מתוך אינטרס אישי (סלפי), על ידי אדם מהשורה, ללא קשר לתפקיד ציבורי.", type:"אירוע" },
+    { text: "ראש עיר העביר כסף מתקציב ספורט לעמותה לסיוע לקשישים, ללא אישור. לטענתו לא לקח לכיסו. מה סוג העבריינות?", options: ["עבריינות פלילית רגילה","עבריינות שלטונית-אישית","עבריינות שלטונית-ציבורית","פקודה בלתי חוקית"], correct:2, explanation:"עבריינות שלטונית-ציבורית — נושא משרה ציבורית שהפר חוק מתוך רצון להטיב עם ציבור מסוים (קשישים), לא לכיסו.", type:"אירוע" },
+    { text: "עוזר שר נתן שוחד לעיתונאי כדי לכסות את השר ולשמור על משרתו שלו. מה סוג העבריינות?", options: ["עבריינות פלילית רגילה","עבריינות שלטונית-ציבורית","עבריינות שלטונית-אישית","פקודה בלתי חוקית"], correct:2, explanation:"עבריינות שלטונית-אישית — נושא משרה ציבורית (עוזר שר) שפעל מתוך אינטרס אישי (שמירת משרתו) תוך שימוש בכוחו הציבורי.", type:"אירוע" }
+  ],
+  9: [
+    { text: "בוחני נהיגה שדרישותיהם לא נענו יצאו להפגנות ועיצומים. איזה סוג זכויות הם מממשים?", options: ["זכויות טבעיות","זכויות קבוצתיות-תרבותיות","זכויות פוליטיות הנובעות מזכויות טבעיות","זכויות אזרח בלבד"], correct:2, explanation:"זכויות פוליטיות הנובעות מזכויות טבעיות (לכולם) — חופש הפגנה ומחאה אינו מוגבל לאזרחים בלבד.", type:"אירוע" },
+    { text: "הצעת חוק לאפשר לאנשי סגל הבחירות להצביע שבוע מוקדם. איזה סוג זכויות הצעה זו נועדה לממש?", options: ["זכויות טבעיות","זכויות קבוצתיות","זכויות אזרח (פוליטיות)","זכויות כלכליות"], correct:2, explanation:"זכויות אזרח — הזכות לבחור היא זכות פוליטית המוענקת לאזרחי המדינה בלבד.", type:"אירוע" },
+    { text: "עדה דרוזית ביקשה מימון להקים בית ספר בשפתם ולמד מסורותיהם. איזה סוג זכויות הם מבקשים?", options: ["זכויות טבעיות","זכויות אזרח","זכויות קבוצתיות-תרבותיות","זכויות פוליטיות"], correct:2, explanation:"זכויות קבוצתיות-תרבותיות — זכות של מיעוט לאומי לחינוך ותרבות בשפתו ובהתאם למורשתו.", type:"אירוע" }
+  ],
+  10: [
+    { text: "בית משפט האריך מעצרו של אדם שהטריד מגישת חדשות בהודעות רבות. בשם איזו זכות?", options: ["הזכות לכבוד ופרטיות","הזכות לשוויון","הזכות לחיים וביטחון","הזכות לקניין"], correct:2, explanation:"הזכות לחיים וביטחון — המעצר נועד להגן על ביטחונה האישי של המגישה מפני ההטרדה המסוכנת.", type:"אירוע" },
+    { text: "שופט ביקש לפסול עצמו ממשפט כי יש לו קרבה משפחתית לנתבע. בשם איזו זכות?", options: ["הזכות לשוויון","הזכות לחרות","הזכות להליך הוגן","הזכות לכבוד"], correct:2, explanation:"הזכות להליך הוגן — שופטים בלתי תלויים הם תנאי יסוד להליך הוגן; קרבה משפחתית פוגעת בתנאי זה.", type:"אירוע" },
+    { text: "בעלי עסקים טוענים שחוק איסור עבודה בשבת פוגע בהם. איזו זכות נפגעת?", options: ["הזכות לחיים","הזכות לכבוד","הזכות לקניין","חופש העיסוק (הזכות לחרות)"], correct:3, explanation:"חופש העיסוק — נגזרת מהזכות לחרות. כל אדם זכאי לעבוד בכל מקצוע; הגבלת ימי עבודה פוגעת בחופש זה.", type:"אירוע" },
+    { text: "מרצה תבע תלמידה שפרסמה ספרים המבוססים על מחקריו ודפי תרגולו ללא רשות. איזו זכות הוא מגן עליה?", options: ["הזכות לכבוד","הזכות לקניין רוחני","הזכות לחיים","הזכות לשוויון"], correct:1, explanation:"הזכות לקניין רוחני — יצירותיו האינטלקטואליות של המרצה הן קניינו, ואין לעשות בהן שימוש ללא רשות.", type:"אירוע" },
+    { text: "אלמנים תובעים שוויון בקצבת שארים לאחר שגילו שאלמנות מקבלות אותה לכל החיים ואלמנים רק עד שהילד עוזב. איזו זכות נפגעת?", options: ["הזכות לחרות","הזכות לקניין","הזכות להליך הוגן","הזכות לשוויון"], correct:3, explanation:"הזכות לשוויון — יחס שונה לאלמנים לעומת אלמנות על בסיס מין, ללא הצדקה רלוונטית לנושא, היא אפליה.", type:"אירוע" }
+  ],
+  11: [
+    { text: "ערוץ טלוויזיה פרסם מודעה שדורשת ממועמדים להיות 'יוצא צבא'. מועמדים התלוננו שאין קשר לדרישות התפקיד. איזו מדיניות מתוארת?", options: ["העדפה מתקנת","הבחנה (מותרת)","אפליה פסולה","שוויון מלא"], correct:2, explanation:"אפליה פסולה — יחס שונה ללא סיבה רלוונטית לתפקיד (שירות צבאי לא קשור לכתבות חברתיות).", type:"אירוע" },
+    { text: "חוק מחייב מוסדות אקדמיים לתת הקלות לסטודנטים עם לקויות למידה (חונך, הקלטות, בחינה בעל פה). איזו מדיניות זו?", options: ["אפליה פסולה","העדפה מתקנת","הבחנה (מותרת)","ביטול שוויון"], correct:2, explanation:"הבחנה (מותרת) — יחס לא שוויוני מסיבה מוצדקת: לקות למידה רלוונטית ישירות לאופן ההוראה והבחינה.", type:"אירוע" },
+    { text: "הצעת חוק מעניקה תוספת לתקציב בחירות לסיעות שיכללו לפחות 30% נשים ברשימה. חברת הכנסת מסבירה שמטרת החוק לצמצם פערים זמנית. איזו מדיניות?", options: ["אפליה פסולה","הבחנה מותרת","העדפה מתקנת","שוויון פורמלי"], correct:2, explanation:"העדפה מתקנת — הטבה לאוכלוסייה חלשה (נשים בפוליטיקה) למשך זמן מוגבל, במטרה לצמצם פערים.", type:"אירוע" }
+  ],
+  12: [
+    { text: "נהג שהיה מעורב בתאונה ברח מהמקום ולא עזר לנפגעת. איזו חובה הוא הפר?", options: ["חובה כאזרח בלבד","חובה כאדם — להכיר בזכויות הזולת ולהימנע מפגיעה","חובה חוקית בלבד (שאינה חובה אנושית)","אין חובה מוסרית, רק חוקית"], correct:1, explanation:"חובה כאדם — להכיר בזכויות הזולת (ובמקרה זה זכות לחיים) ולהימנע מפגיעה בהן, גם לפני שהחוק קובע זאת.", type:"אירוע" }
+  ],
+  13: [
+    { text: "בית משפט בצרפת הורה לחברת יאהו לחסום גישה לאתרי מכירת מזכרות נאציות. איזה עיקרון הנחה את הפסיקה?", options: ["פלורליזם","שלטון החוק","דמוקרטיה מתגוננת","סובלנות"], correct:2, explanation:"דמוקרטיה מתגוננת — הגנה על הדמוקרטיה מפני תכנים נאצים שעלולים לסכן את הסדר הדמוקרטי.", type:"אירוע" },
+    { text: "לפי חוק המפלגות, מפלגה הסוברת שישראל לא צריכה להיות מדינה יהודית רשאית להתמודד לכנסת?", options: ["כן, זוהי חירות הביטוי הדמוקרטית","לא, אם היא שוללת את אופי המדינה כיהודית ודמוקרטית","כן, כל עמדה פוליטית מותרת","תלוי בבית המשפט בכל מקרה"], correct:1, explanation:"דמוקרטיה מתגוננת — מפלגה ששוללת את ישראל כמדינה יהודית ודמוקרטית לא תוכל להתמודד בבחירות.", type:"ידע" }
+  ],
+  14: [
+    { text: "עובדי הוראה טענו שאיסור העבודה ללא חיסון פוגע ב'זכויות יסוד שעוגנו בחוק יסוד'. על איזה חוק יסוד הם מתבססים?", options: ["חוק יסוד: הממשלה","חוק יסוד: ישראל — מדינת הלאום","חוק יסוד: כבוד האדם וחירותו","חוק יסוד: הכנסת"], correct:2, explanation:"חוק יסוד: כבוד האדם וחירותו — עוגן את הזכות לחירות ולאוטונומיה על הגוף, עליהן מסתמכים המתנגדים.", type:"אירוע" },
+    { text: "ארגונים עתרו לבג\"ץ על צפיפות בבתי כלא — תנאים משפילים ופגיעה בבריאות. בית המשפט קיבל. על איזה חוק יסוד הסתמך?", options: ["חוק יסוד: ישראל — מדינת הלאום","חוק יסוד: חופש העיסוק","חוק יסוד: כבוד האדם וחירותו","חוק יסוד: הכנסת"], correct:2, explanation:"חוק יסוד: כבוד האדם וחירותו — כולל את הזכות לכבוד ואיסור יחס משפיל ואכזרי.", type:"אירוע" },
+    { text: "בכיר בסוכנות היהודית אמר שמיזם שמירת קשר עם קהילות יהודיות מממש 'אחד מחוקי היסוד'. על איזה חוק יסוד הוא מתכוון?", options: ["חוק יסוד: כבוד האדם וחירותו","חוק יסוד: ישראל — מדינת הלאום","חוק יסוד: הכנסת","חוק יסוד: הממשלה"], correct:1, explanation:"חוק יסוד: ישראל — מדינת הלאום — כולל סעיף על קיבוץ גלויות וחיזוק הקשר עם יהודי התפוצות.", type:"אירוע" }
+  ]
+};
+
+// ── STORAGE ────────────────────────────────────────────────────
+function s(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+function g(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch(e){return d;} }
+
+let topics11 = g('cv_topics11', TOPICS_11);
+let questions11 = g('cv_q11', BUILTIN_QS);
+let feed = g('cv_feed', []);
+
+function saveAll(){
+  s('cv_topics11', topics11);
+  s('cv_q11', questions11);
+  s('cv_feed', feed);
+}
+
+// ── NAV ────────────────────────────────────────────────────────
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on')); document.getElementById(id).classList.add('on'); }
+
+function openClass(cls){
+  curClass = cls;
+  const ac = cls==='11'?'var(--accent)':'#f06292';
+  document.getElementById('cls-title').textContent = cls==='11'?'כיתה י״א':'כיתה י״ב';
+  document.getElementById('cls-sub').textContent = cls==='11'?'לאומיות וזכויות':'תכנית ישנה';
+  // set tab colors
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.classList.remove('t11','t12');
+    t.classList.add('t'+cls);
+  });
+  switchTab('topics');
+  show('s-class');
+  if(cls==='11') renderTopics11();
+  else renderTopics12();
+  renderFeed('cls-feed');
+}
+
+function goHome(){ show('s-home'); renderHomeFeed(); }
+
+function switchTab(tab){
+  curTab = tab;
+  const tabs = ['topics','practice','feed'];
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('on', tabs[i]===tab));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.getElementById('panel-'+tab).classList.add('on');
+  if(tab==='practice') initPractice();
+  if(tab==='feed') renderFeed('cls-feed');
+}
+
+// ── TOPICS 11 ──────────────────────────────────────────────────
+function renderTopics11(){
+  const c = document.getElementById('topics-container');
+  c.innerHTML = '<div class="topics">' +
+    topics11.map((t,i)=>`
+      <div class="topic-item" onclick="openTopicDetail(${i})" style="--ac:var(--accent)">
+        <div class="t-num">פרק ${i+1}</div>
+        <h4>${t.name}</h4>
+        <p>${t.desc}</p>
+        ${t.links.length ? '<div class="t-links">'+t.links.map(l=>`<a class="t-link" href="${l.url}" target="_blank">🔗 ${l.label}</a>`).join('')+'</div>' : ''}
+      </div>
+    `).join('') + '</div>';
+}
+
+function renderTopics12(){
+  document.getElementById('topics-container').innerHTML = '<div class="empty"><div class="icon">📚</div>חומרי י״ב יתווספו בקרוב</div>';
+}
+
+function openTopicDetail(idx){
+  const t = topics11[idx];
+  const ac = 'var(--accent)';
+  const c = document.getElementById('topics-container');
+  c.innerHTML = `
+    <div class="topic-detail">
+      <div class="td-back" onclick="renderTopics11()">← חזרה לנושאים</div>
+      <div class="td-title">פרק ${idx+1}: ${t.name}</div>
+      <div class="td-desc">${t.desc}</div>
+      ${t.links.length ? '<div class="t-links" style="margin-bottom:14px">'+t.links.map(l=>`<a class="t-link" href="${l.url}" target="_blank">🔗 ${l.label}</a>`).join('')+'</div>' : ''}
+      <div class="td-concepts">
+        ${(t.concepts||[]).map(c=>`
+          <div class="concept-card" style="--ac:var(--accent)">
+            <h5>${c.title}</h5>
+            <p>${c.body.replace(/\n/g,'<br>')}</p>
+          </div>
+        `).join('')}
+      </div>
+      <button class="td-practice-btn" style="background:var(--accent);color:#fff" onclick="goToPractice(${idx})">✏️ תרגל נושא זה</button>
+    </div>
+  `;
+}
+
+function goToPractice(idx){
+  switchTab('practice');
+  const sel = document.getElementById('prac-select');
+  sel.value = idx;
+  startPractice();
+}
+
+// ── PRACTICE ───────────────────────────────────────────────────
+function initPractice(){
+  const sel = document.getElementById('prac-select');
+  if(curClass==='12'){ document.getElementById('prac-content').innerHTML='<div class="empty"><div class="icon">✏️</div>תרגול י״ב בקרוב</div>'; sel.style.display='none'; return; }
+  sel.style.display='block';
+  sel.innerHTML = '<option value="">— בחר נושא לתרגול —</option>' +
+    topics11.map((t,i)=>`<option value="${i}">פרק ${i+1}: ${t.name}</option>`).join('');
+  document.getElementById('prac-content').innerHTML = '';
+}
+
+function startPractice(){
+  const idx = document.getElementById('prac-select').value;
+  if(idx==='') { document.getElementById('prac-content').innerHTML=''; return; }
+  const qs = (questions11[idx]||[]).slice();
+  pracQs = qs; pracIdx = 0; pracScore = 0;
+  showQ(parseInt(idx));
+}
+
+function showQ(topicIdx){
+  if(pracIdx < pracQs.length){
+    renderQ(pracQs[pracIdx], topicIdx);
+  } else {
+    // AI question
+    const el = document.getElementById('prac-content');
+    el.innerHTML = '<div class="q-card"><div class="q-meta"><span class="ai-tag">✨ AI</span></div><div class="spinner"></div></div>';
+    genAIQ(topicIdx);
+  }
+}
+
+function renderQ(q, topicIdx){
+  pracAnswered = false;
+  const el = document.getElementById('prac-content');
+  const isAI = q._ai;
+  const showScore = pracIdx > 0;
+  el.innerHTML = `
+    ${showScore ? `<div class="score-card"><div class="score-big" style="color:var(--accent)">${pracScore}/${pracIdx}</div><div class="score-sub">ניקוד עד כה</div></div>` : ''}
+    <div class="q-card">
+      <div class="q-meta">
+        <span>שאלה ${pracIdx+1}</span>
+        ${q.type ? `<span class="q-type-tag">${q.type}</span>` : ''}
+        ${isAI ? '<span class="ai-tag">✨ AI</span>' : ''}
+      </div>
+      <div class="q-text">${q.text}</div>
+      <div class="opts" id="opts">
+        ${q.options.map((o,i)=>`<button class="opt" onclick="checkAns(${i},${q.correct},this,${topicIdx})">${'אבגד'[i]}. ${o}</button>`).join('')}
+      </div>
+      <div id="exp" style="display:none" class="explanation">${q.explanation||''}</div>
+    </div>
+    <button class="next-btn" id="nxt" style="display:none;background:var(--accent)" onclick="nextQ(${topicIdx})">שאלה הבאה ←</button>
+  `;
+}
+
+function checkAns(chosen, correct, btn, topicIdx){
+  if(pracAnswered) return;
+  pracAnswered = true;
+  document.querySelectorAll('.opt').forEach((o,i)=>{
+    o.classList.add('disabled');
+    if(i===correct) o.classList.add('correct');
+    else if(i===chosen) o.classList.add('wrong');
+  });
+  if(chosen===correct) pracScore++;
+  const exp = document.getElementById('exp');
+  if(exp && exp.textContent.trim()) exp.style.display='block';
+  const nxt = document.getElementById('nxt');
+  if(nxt) nxt.style.display='block';
+}
+
+function nextQ(topicIdx){
+  pracIdx++;
+  showQ(topicIdx);
+}
+
+async function genAIQ(topicIdx){
+  const topicName = topics11[topicIdx]?.name || '';
+  const prompt = `אתה מומחה לאזרחות ישראלית. צור שאלת בגרות בסגנון שאלת אירוע לנושא: "${topicName}".
+החזר JSON תקין בלבד (ללא markdown):
+{"text":"השאלה","options":["א","ב","ג","ד"],"correct":0,"explanation":"הסבר"}
+הוסף קטע מציאותי קצר כרקע לשאלה, ואז שאל לזיהוי המושג/העקרון.`;
+  try {
+    const r = await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})
+    });
+    const d = await r.json();
+    const raw = (d.content||[]).find(c=>c.type==='text')?.text||'';
+    const q = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    q._ai = true;
+    pracQs.push(q);
+    renderQ(q, topicIdx);
+  } catch(e){
+    document.getElementById('prac-content').innerHTML=`<div class="empty"><div class="icon">⚠️</div>לא הצלחתי לטעון שאלת AI<br><br><button class="next-btn" onclick="showQ(${topicIdx})" style="width:auto;padding:10px 20px;background:var(--accent)">נסה שוב</button></div>`;
+  }
+}
+
+// ── FEED ───────────────────────────────────────────────────────
+function renderFeed(containerId, limit){
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  let items = feed.filter(f=>{
+    if(containerId==='home-feed') return true;
+    return f.cls==='both' || f.cls===curClass;
+  });
+  if(limit) items = items.slice(0,limit);
+  if(!items.length){ el.innerHTML='<div class="empty"><div class="icon">📰</div>אין עדכונים עדיין</div>'; return; }
+  el.innerHTML = items.map((item,i)=>`
+    <div class="feed-card" style="--ac:${curClass==='12'?'#f06292':'var(--accent)'}">
+      <div class="feed-body">
+        ${item.tag?`<span class="feed-tag">${item.tag}</span>`:''}
+        <div class="feed-date">${item.date} · ${item.cls==='both'?'לשתי הכיתות':'כיתה י"'+item.cls}</div>
+        <div class="feed-title">${item.title}</div>
+        <div class="feed-desc">${item.desc}</div>
+        ${item.url?`<a class="feed-link" href="${item.url}" target="_blank">קרא עוד →</a>`:''}
+      </div>
+      <div class="feed-actions">
+        <button class="react-btn ${item.r?.like?'on':''}" onclick="react(${i},'like','${containerId}')">👍 ${item.r?.like||0}</button>
+        <button class="react-btn ${item.r?.fire?'on':''}" onclick="react(${i},'fire','${containerId}')">🔥 ${item.r?.fire||0}</button>
+        <button class="react-btn" onclick="toggleCmt(${i},'${containerId}')">💬 ${(item.cmts||[]).length}</button>
+        <button class="share-btn" onclick="shareItem(${i})">⬆️ שתף</button>
+      </div>
+      <div id="cmt-${containerId}-${i}" style="display:none" class="comments-area">
+        <div>${(item.cmts||[]).map(c=>`<div class="comment-item">💬 ${c}</div>`).join('')}</div>
+        <div class="comment-form">
+          <input class="comment-inp" id="ci-${containerId}-${i}" placeholder="הגב..." onkeydown="if(event.key==='Enter')submitCmt(${i},'${containerId}')">
+          <button class="comment-send" onclick="submitCmt(${i},'${containerId}')">שלח</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderHomeFeed(){ renderFeed('home-feed',3); }
+function react(i,type,cid){ if(!feed[i].r) feed[i].r={}; feed[i].r[type]=(feed[i].r[type]||0)+1; saveAll(); renderFeed(cid); }
+function toggleCmt(i,cid){ const el=document.getElementById(`cmt-${cid}-${i}`); el.style.display=el.style.display==='none'?'block':'none'; }
+function submitCmt(i,cid){ const inp=document.getElementById(`ci-${cid}-${i}`); const t=inp.value.trim(); if(!t)return; if(!feed[i].cmts)feed[i].cmts=[]; feed[i].cmts.push(t); inp.value=''; saveAll(); renderFeed(cid); setTimeout(()=>{ const el=document.getElementById(`cmt-${cid}-${i}`); if(el)el.style.display='block'; },30); }
+function shareItem(i){ const f=feed[i]; if(navigator.share){navigator.share({title:f.title,text:f.desc,url:f.url||location.href});}else{navigator.clipboard.writeText(f.url||location.href); alert('הקישור הועתק!');} }
+
+// ── TEACHER ────────────────────────────────────────────────────
+function openTeacher(){ document.getElementById('t-panel').classList.add('on'); fillTeacherSelects(); }
+function closeTeacher(){ document.getElementById('t-panel').classList.remove('on'); }
+function overlayClick(e){ if(e.target===document.getElementById('t-panel')) closeTeacher(); }
+function checkPass(){
+  if(document.getElementById('pass-in').value===PASS){
+    teacherIn=true;
+    document.getElementById('t-pass').style.display='none';
+    document.getElementById('t-main').style.display='block';
+    fillTeacherSelects();
+  } else { document.getElementById('pass-err').textContent='סיסמה שגויה'; }
+}
+function fillTeacherSelects(){
+  const opts = topics11.map((t,i)=>`<option value="${i}">פרק ${i+1}: ${t.name}</option>`).join('');
+  ['t-tp-sel','t-q-tp'].forEach(id=>{ const el=document.getElementById(id); if(el) el.innerHTML=opts; });
+}
+function addUpdate(){
+  const t=v('t-ttl'), d=v('t-dsc');
+  if(!t||!d){alert('מלא כותרת ותיאור');return;}
+  const now=new Date();
+  feed.unshift({title:t,desc:d,url:v('t-url'),tag:v('t-tag'),cls:v('t-cls'),date:now.toLocaleDateString('he-IL'),r:{},cmts:[]});
+  saveAll(); ['t-ttl','t-dsc','t-url','t-tag'].forEach(id=>document.getElementById(id).value='');
+  renderHomeFeed(); if(curClass) renderFeed('cls-feed');
+  alert('✅ פורסם!');
+}
+function addLink(){
+  const idx=v('t-tp-sel'), lbl=v('t-lbl'), lnk=v('t-lnk');
+  if(!lbl||!lnk){alert('מלא תווית וקישור');return;}
+  topics11[idx].links.push({label:lbl,url:lnk});
+  saveAll(); ['t-lbl','t-lnk'].forEach(id=>document.getElementById(id).value='');
+  if(curClass==='11') renderTopics11();
+  alert('✅ הקישור נוסף!');
+}
+function addQuestion(){
+  const idx=v('t-q-tp'), txt=v('t-q-txt'), a=v('t-q-a'), b=v('t-q-b'), c=v('t-q-c'), d_=v('t-q-d');
+  if(!txt||!a||!b||!c||!d_){alert('מלא את כל השדות');return;}
+  if(!questions11[idx]) questions11[idx]=[];
+  questions11[idx].push({text:txt,options:[a,b,c,d_],correct:parseInt(v('t-q-ans')),explanation:v('t-q-exp'),type:'ידע'});
+  saveAll(); ['t-q-txt','t-q-a','t-q-b','t-q-c','t-q-d','t-q-exp'].forEach(id=>document.getElementById(id).value='');
+  alert('✅ השאלה נוספה!');
+}
+function v(id){ const el=document.getElementById(id); return el?el.value.trim():''; }
+
+// ── INIT ───────────────────────────────────────────────────────
+renderHomeFeed();
+</script>
+</body>
+</html>
